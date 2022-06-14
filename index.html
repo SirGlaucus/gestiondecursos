@@ -172,8 +172,8 @@
     axios.post(url, data).then(() => getData());
   }
 
-  function eliminarCurso(i, nombre) {
-    axios.delete(url + "/" + nombre).then(() => {
+  function eliminarCurso(i, id) {
+    axios.delete(`${url}/${id}`).then(() => {
       alert("Curso " + nombre + " eliminado");
       getData();
     });
@@ -194,7 +194,7 @@
 
   function editarCurso(id) {
     axios
-      .put(url, {
+      .put(`${url}/${id}`, {
         nombre: nombre.value,
         nivelTecnico: nivelTecnico.value,
         fechaInicio: fechaInicio.value,

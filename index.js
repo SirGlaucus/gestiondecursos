@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 const app = express()
 
-const { nuevoCurso, getCanales, editCanal, deleteCanal } = require('./consultas')
+const { nuevoCurso, getCursos, editarCurso, deleteCanal } = require('./consultas')
 
 app.listen(3000, () => {
     console.log('Servidor activo en el puerto 3000')
@@ -18,27 +18,22 @@ app.get('/', (req, res) => {
 // Funciona
 app.post('/curso', async (req, res) => {
     const datosCurso = req.body
+    console.log(datosCurso)
     const respuesta = await nuevoCurso(datosCurso)
     res.send(respuesta)
 })
 
-// Paso 1
-app.get('/canales', async (req, res) => {
-    // Paso 2
-    const respuesta = await getCanales()
-    // Paso 3
+// Funciona
+app.get('/cursos', async (req, res) => {
+    const respuesta = await getCursos()
     res.send(respuesta)
 })
 
-// Paso 1
-app.put('/canal/:id', async (req, res) => {
-    // Paso 2
+// Funciona
+app.put('/curso/:id', async (req, res) => {
+    const datos = req.body
     const { id } = req.params
-    // Paso 3
-    const { nombre } = req.body
-    // Paso 4
-    const respuesta = await editCanal(id, nombre)
-    // Paso 5
+    const respuesta = await editarCurso(datos, id)
     res.send(respuesta)
 })
 
@@ -55,7 +50,6 @@ app.delete('/canal/:id', async (req, res) => {
 })
 
 app.get('*', (req, res) => {
-    // Paso 2
-    res.send('<center><h1>Esta ruta no existe...</h1> </center>')
+    res.send('<center><h1>Esta ruta no existe...</h1></center>')
 })
 
