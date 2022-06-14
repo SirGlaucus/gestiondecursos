@@ -2,34 +2,31 @@ const express = require('express')
 const path = require('path')
 const app = express()
 
-const { nuevoCurso, getCursos, editarCurso, deleteCanal } = require('./consultas')
-
-app.listen(3000, () => {
-    console.log('Servidor activo en el puerto 3000')
-})
+// Exportar funciones
+const { nuevoCurso, getCursos, editarCurso, deleteCurso } = require('./consultas')
 
 app.use(express.json()) // Ya no es necesario utilizar el body-parse, con esta linea de codigo basta
 
+// Leer pagina principal
 app.get('/', (req, res) => {
     const ruta = path.join(__dirname, 'index.html')
     res.sendFile(ruta)
 })
 
-// Funciona
+// Agregar curso
 app.post('/curso', async (req, res) => {
     const datosCurso = req.body
-    console.log(datosCurso)
     const respuesta = await nuevoCurso(datosCurso)
     res.send(respuesta)
 })
 
-// Funciona
+// Leer cursos
 app.get('/cursos', async (req, res) => {
     const respuesta = await getCursos()
     res.send(respuesta)
 })
 
-// Funciona
+// Editar curso
 app.put('/curso/:id', async (req, res) => {
     const datos = req.body
     const { id } = req.params
@@ -37,19 +34,23 @@ app.put('/curso/:id', async (req, res) => {
     res.send(respuesta)
 })
 
-// Paso 1
-app.delete('/canal/:id', async (req, res) => {
-    // Paso 2
+// Eliminar curso
+app.delete('/curso/:id', async (req, res) => {
     const { id } = req.params
-    // Paso 3
-    const respuesta = await deleteCanal(id)
-    // Paso 4
-    respuesta > 0
-        ? res.send({ message: `El canal de id ${id} fue eliminado con éxito`})
-        : res.send({ message: 'No existe un canal registrado con ese id'})
+    const respuesta = await deleteCurso(id)
+    if (respuesta > 0) {
+        res.send({ message: `El canal de id ${id} fue eliminado con éxito` })
+    } else {
+        res.send({ message: 'No existe un canal registrado con ese id' })
+    }
 })
 
+// Cualquier otra ruta dara error
 app.get('*', (req, res) => {
     res.send('<center><h1>Esta ruta no existe...</h1></center>')
 })
 
+// Activar servidor
+app.listen(3000, () => {
+    console.log('Servidor activo en el puerto 3000')
+})
